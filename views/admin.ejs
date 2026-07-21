@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control | Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #d6c9a7; color: #5d4037; }
+        .sidebar { background: #4e342e; min-height: 100vh; color: #eceff1; padding: 20px; }
+        .sidebar a { color: #d7ccc8 !important; }
+        .sidebar a:hover { color: #ffffff !important; }
+        .accordion-item { border: 1px solid #d7ccc8; background-color: #fffaf0; }
+        .accordion-header { background-color: #fffaf0; }
+        .accordion-body { background-color: #fffaf0; color: #5d4037; }
+        
+        .btn-historial-admin { background-color: #27ae60; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+        
+        .clase-de-tu-contenedor { max-height: 60vh; overflow-y: auto; padding-right: 15px; }
+
+        .modal-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); z-index: 2000; }
+        .modal-contenido { background: white; width: 450px; margin: 20px auto; padding: 25px; border-radius: 10px; position: relative; color: #333; max-height: 90vh; overflow-y: auto; }
+        
+        .form-label { font-weight: bold; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 sidebar">
+            <h4>Admin Panel</h4>
+            <hr>
+            <button class="btn btn-primary w-100 mb-3" onclick="document.getElementById('modal-agregar').style.display='block'">+ Agregar Usuario</button>
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link" href="/">Ir a Tienda</a></li>
+                <li class="nav-item"><a class="nav-link" href="/admin/mensajes">Ver Mensajes Recibidos</a></li>
+                <li class="nav-item"><a class="nav-link" href="/logout">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="col-md-10 p-4">
+            <h2>Gestión de Usuarios</h2>
+            <div class="accordion" id="accordionUsuarios">
+                <% usuarios.forEach((user, index) => { %>
+                    <div class="accordion-item mb-2 shadow-sm">
+                        <div class="accordion-header d-flex justify-content-between align-items-center p-2">
+                            <button class="btn btn-link text-decoration-none text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<%= index %>">
+                                <strong><%= user.nombre %></strong>
+                            </button>
+                            <form action="/admin/eliminar-usuario/<%= user.id %>" method="POST" onsubmit="return confirm('¿Eliminar a <%= user.nombre %>?');" class="m-0">
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Eliminar</button>
+                            </form>
+                        </div>
+                        <div id="collapse<%= index %>" class="accordion-collapse collapse" data-bs-parent="#accordionUsuarios">
+                            <div class="accordion-body">
+                                <p><strong>Nombre Completo:</strong> <%= user.nombre %></p>
+                                <p><strong>DNI:</strong> <%= user.dni %></p>
+                                <p><strong>Domicilio:</strong> <%= user.domicilio %></p>
+                                <p><strong>Teléfono:</strong> <%= user.telefono %></p>
+                                <p><strong>Email:</strong> <%= user.email %></p>
+                                <p><strong>Fecha de Nacimiento:</strong> <%= user.fecha_nacimiento ? new Date(user.fecha_nacimiento).toLocaleDateString() : 'No especificada' %></p>
+                                <p><strong>Ciudad:</strong> <%= user.ciudad %></p>
+                                <p><strong>Provincia:</strong> <%= user.provincia %></p>
+                                <p><strong>Rol:</strong> <span class="badge bg-primary"><%= user.rol %></span></p>
+                                <button onclick="verHistorialUsuario('<%= user.id %>')" class="btn-historial-admin">Ver Historial de Compras</button>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Modal: Agregar Usuario -->
+<div id="modal-agregar" class="modal-overlay">
+    <div class="modal-contenido">
+        <h3>Crear Cuenta</h3>
+        <form action="/admin/agregar-usuario" method="POST">
+            <label class="form-label">Nombre Completo</label><input type="text" name="nombre" class="form-control" required>
+            <label class="form-label">DNI</label><input type="text" name="dni" class="form-control" required>
+            <label class="form-label">Domicilio</label><input type="text" name="domicilio" class="form-control" required>
+            <label class="form-label">Número de Contacto</label><input type="text" name="telefono" class="form-control" required>
+            <label class="form-label">Correo Electrónico</label><input type="email" name="email" class="form-control" required>
+            <label class="form-label">Contraseña</label><input type="password" name="password" class="form-control" required>
+            <label class="form-label">Fecha de Nacimiento</label><input type="date" name="fecha_nacimiento" class="form-control" required>
+            <label class="form-label">Ciudad</label><input type="text" name="ciudad" class="form-control" required>
+            <label class="form-label">Provincia</label><input type="text" name="provincia" class="form-control" required>
+            <button type="submit" class="btn btn-primary mt-3 w-100">Registrar</button>
+            <button type="button" class="btn btn-secondary mt-2 w-100" onclick="document.getElementById('modal-agregar').style.display='none'">Cancelar</button>
+        </form>
+    </div>
+</div>
+
+<!-- Modal: Historial -->
+<div id="modal-historial" class="modal-overlay">
+    <div class="modal-contenido">
+        <h3>Historial de Pedidos</h3>
+        <div id="contenido-modal" class="clase-de-tu-contenedor">Cargando...</div>
+        <button class="btn btn-secondary mt-3 w-100" onclick="document.getElementById('modal-historial').style.display='none'">Cerrar</button>
+    </div>
+</div>
+
+<script>
+    async function verHistorialUsuario(userId) {
+        const modal = document.getElementById('modal-historial');
+        const contenido = document.getElementById('contenido-modal');
+        modal.style.display = 'block';
+        contenido.innerHTML = 'Cargando...';
+        
+        try {
+            const response = await fetch(`/api/admin/historial-usuario/${userId}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include' 
+            });
+            
+            if (!response.ok) throw new Error('No autorizado o error de servidor');
+            
+            const pedidos = await response.json();
+            
+            if (pedidos.length === 0) { 
+                contenido.innerHTML = '<p>Sin compras.</p>'; 
+                return; 
+            }
+            
+            let html = '';
+            pedidos.forEach(p => {
+                html += `<div class="mb-3 border-bottom"><h6>Pedido #${p.id} - ${new Date(p.fecha).toLocaleDateString()}</h6><table class="table table-sm">`;
+                if(p.productos && Array.isArray(p.productos)) {
+                    p.productos.forEach(prod => html += `<tr><td>${prod.producto_nombre}</td><td>${prod.cantidad}</td><td>$${parseFloat(prod.precio_unitario).toLocaleString()}</td></tr>`);
+                }
+                html += `</table><p><strong>Total: $${parseFloat(p.total).toLocaleString()}</strong></p></div>`;
+            });
+            contenido.innerHTML = html;
+        } catch (e) { 
+            console.error(e);
+            contenido.innerHTML = 'Error al cargar los datos. Verifica que sigues logueado.'; 
+        }
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

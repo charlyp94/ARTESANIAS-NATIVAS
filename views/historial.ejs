@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Compras - Librería Tartagal</title>
+    <link rel="stylesheet" href="/css/estilo.css">
+    <style>
+        /* Estilos del Botón Volver con Animación */
+    .btn-volver { 
+        display: inline-block; 
+        background-color: #3498db; 
+        color: white; 
+        padding: 10px 20px; 
+        text-decoration: none; 
+        border-radius: 5px; 
+        margin-bottom: 20px; 
+        font-weight: bold;
+        /* La clave para la animación */
+        transition: transform 0.3s ease, background-color 0.3s ease; 
+    }
+
+    .btn-volver:hover { 
+        background-color: #2980b9; 
+        /* Efecto de agrandado */
+        transform: scale(1.05); 
+    }
+
+    .btn-volver:active {
+        /* Efecto de clic */
+        transform: scale(0.98);
+    }
+
+    /* Resto de tus estilos */
+    .tabla-historial { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
+    .tabla-historial th { background-color: #2c3e50; color: white; padding: 15px; }
+    .tabla-historial td { padding: 15px; border-bottom: 1px solid #ddd; text-align: center; cursor: pointer; }
+    .tabla-historial tr:hover { background-color: #f9f9f9; }
+    
+    #modal-detalle { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); z-index: 1000; }
+    .modal-contenido { background: white; width: 500px; margin: 100px auto; padding: 25px; border-radius: 10px; position: relative; }
+    .btn-cerrar { background: #2c3e50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 15px; }
+        .btn-volver { display: inline-block; background-color: #8b6e4e; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-bottom: 20px; font-weight: bold; }
+        .btn-volver:hover { background-color: #8b6e4e !important; }
+        .tabla-historial { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
+        .tabla-historial th { background-color: #2c3e50; color: white; padding: 15px; }
+        .tabla-historial td { padding: 15px; border-bottom: 1px solid #ddd; text-align: center; cursor: pointer; }
+        .tabla-historial tr:hover { background-color: #f9f9f9; }
+        
+        #modal-detalle { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); z-index: 1000; }
+        .modal-contenido { background: white; width: 500px; margin: 100px auto; padding: 25px; border-radius: 10px; position: relative; }
+        .btn-cerrar { background: #2c3e50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <header><!-- Tu header existente --></header>
+
+    <main style="padding: 40px;">
+        <!-- Botón Volver -->
+        <a href="/" class="btn-volver">← Volver al Catálogo</a>
+
+        <h2 style="text-align: center; color: white;">Historial Detallado de Pedidos</h2>
+        <p style="text-align: center; color: white; font-style: italic;">💡 Hacé clic sobre cualquier fila de la lista para ver el detalle.</p>
+
+        <table class="tabla-historial">
+            <thead>
+                <tr>
+                    <th>N° Pedido</th>
+                    <th>Fecha y Hora</th>
+                    <th>Artesanías Compradas</th>
+                    <th>Total Abonado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% pedidos.forEach(pedido => { %>
+                    <tr class="fila-pedido" 
+                        data-id="<%= pedido.id %>" 
+                        data-fecha="<%= new Date(pedido.fecha).toLocaleString() %>" 
+                        data-total="<%= pedido.total %>">
+                        
+                        <td>#<%= pedido.id %></td>
+                        <td><%= new Date(pedido.fecha).toLocaleString() %></td>
+                        <td>
+                            <% if (pedido.productos && pedido.productos.length > 0) { %>
+                                <%= pedido.productos.map(p => p.producto_nombre).join(', ') %>
+                            <% } else { %>
+                                Sin detalles
+                            <% } %>
+                        </td>
+                        <td>$<%= parseFloat(pedido.total).toLocaleString() %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </main>
+
+    <!-- Modal -->
+    <div id="modal-detalle">
+        <div class="modal-contenido">
+            <h3 id="modal-titulo">Resumen del Pedido</h3>
+            <p id="modal-fecha"></p>
+            <div id="contenido-modal">Cargando...</div>
+            <p><strong>Total abonado: </strong><span id="modal-total"></span></p>
+            <button class="btn-cerrar" onclick="document.getElementById('modal-detalle').style.display='none'">Cerrar ventana</button>
+        </div>
+    </div>
+
+    <script>
+    document.querySelectorAll('.fila-pedido').forEach(fila => {
+        fila.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            const fecha = this.getAttribute('data-fecha');
+            const total = this.getAttribute('data-total');
+            abrirDetalle(id, fecha, total);
+        });
+    });
+
+    async function abrirDetalle(pedidoId, fecha, total) {
+        const modal = document.getElementById('modal-detalle');
+        modal.style.display = 'block';
+        document.getElementById('modal-titulo').textContent = 'Resumen del Pedido #' + pedidoId;
+        document.getElementById('modal-fecha').textContent = 'Realizado el ' + fecha;
+        document.getElementById('modal-total').textContent = '$' + parseFloat(total).toLocaleString();
+        
+        const contenido = document.getElementById('contenido-modal');
+        contenido.innerHTML = 'Cargando productos...';
+
+        try {
+            const response = await fetch(`/api/detalle-pedido/${pedidoId}`);
+            const productos = await response.json();
+            
+            let html = '<ul>';
+            productos.forEach(p => {
+                html += `<li>${p.producto_nombre} (x${p.cantidad}) - $${parseFloat(p.precio_unitario).toLocaleString()}</li>`;
+            });
+            html += '</ul>';
+            contenido.innerHTML = html;
+        } catch (e) {
+            contenido.innerHTML = 'Error al cargar los detalles.';
+        }
+    }
+    </script>
+</body>
+</html>

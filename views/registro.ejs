@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro | Registro de Usuarios</title>
+    <!-- Incluimos Bootstrap para los estilos -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+    body {
+        background-image: url('/imagen/logo1.png'); 
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+    }
+
+    .card {
+        background-color: rgba(255, 245, 230, 0.95); /* Un fondo más sólido para contrastar */
+        border: 2px solid #d2b48c; /* Borde un poco más marcado */
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        width: 100%;
+        max-width: 500px;
+        padding: 25px;
+        color: #000000; /* Texto principal en negro */
+    }
+
+    h3 {
+        font-weight: bold;
+        color: #000000;
+    }
+
+    .form-label {
+        font-weight: 700; /* Más grueso */
+        color: #212529;   /* Color oscuro para los nombres de campos */
+        margin-bottom: 5px;
+    }
+
+    .form-control {
+        border: 1px solid #999; /* Borde más visible en los campos */
+    }
+    
+    a {
+        color: #0056b3; /* Un azul más oscuro para que se vea bien */
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+
+<div class="card p-4">
+    <h3 class="text-center mb-4">Crear Cuenta</h3>
+    <!-- ID agregado para el control con JS -->
+    <form id="registroForm">
+        
+        <div class="mb-3">
+            <label class="form-label">Nombre Completo</label>
+            <input type="text" name="nombre" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">DNI</label>
+            <input type="text" name="dni" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Domicilio</label>
+            <input type="text" name="domicilio" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Fecha de Nacimiento</label>
+            <input type="date" name="fecha_nacimiento" class="form-control" required>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Ciudad</label>
+                <input type="text" name="ciudad" class="form-control" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Provincia</label>
+                <input type="text" name="provincia" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Número de Contacto</label>
+            <input type="text" name="telefono" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Correo Electrónico</label>
+            <input type="email" name="email" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Contraseña</label>
+            <input type="password" name="password" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+    </form>
+    <p class="text-center mt-3">¿Ya tienes cuenta? <a href="/login">Inicia sesión aquí</a></p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.getElementById('registroForm').addEventListener('submit', async (e) => {
+        e.preventDefault(); // Evita que se recargue la página
+        
+        // Obtenemos los datos del formulario
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+
+        const response = await fetch('/registro', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        const resultado = await response.json();
+
+        if (resultado.success) {
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: resultado.message,
+                confirmButtonColor: '#0d6efd'
+            }).then(() => {
+                window.location.href = '/login'; // Redirige al login tras éxito
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: resultado.message,
+                confirmButtonColor: '#0d6efd'
+            });
+        }
+    });
+</script>
+</body>
+</html>

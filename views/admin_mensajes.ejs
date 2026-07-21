@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensajes Recibidos | Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Estilos sincronizados con admin.ejs */
+        body { background-color: #d6c9a7; color: #5d4037; }
+        .sidebar { background: #4e342e; min-height: 100vh; color: #eceff1; padding: 20px; }
+        .sidebar a { color: #d7ccc8 !important; text-decoration: none; }
+        .sidebar a:hover { color: #ffffff !important; }
+        
+        /* Estilos para la tabla y contenedores */
+        .card-mensajes { background-color: #fffaf0; border: 1px solid #d7ccc8; padding: 20px; border-radius: 10px; }
+        .table { color: #5d4037; }
+        .table thead { background-color: #4e342e; color: #eceff1; }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar igual al del panel principal -->
+        <nav class="col-md-2 sidebar">
+            <h4>Admin Panel</h4>
+            <hr>
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link" href="/panel-admin">← Volver al Panel</a></li>
+                <li class="nav-item"><a class="nav-link" href="/">Ir a Tienda</a></li>
+                <li class="nav-item"><a class="nav-link" href="/logout">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+
+        <main class="col-md-10 p-4">
+            <h2 class="mb-4">Mensajes Recibidos</h2>
+            
+            <div class="card-mensajes shadow-sm">
+                <% if (mensajes && mensajes.length > 0) { %>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Correo</th>
+                                <th>Mensaje</th>
+                                <th>Imagen</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% mensajes.forEach(m => { %>
+                                <tr>
+                                    <td><strong><%= m.nombre %></strong></td>
+                                    <td><%= m.correo %></td>
+                                    <td><%= m.mensaje %></td>
+                                    <td>
+                                        <% if (m.imagen) { %>
+                                            <a href="/uploads/<%= m.imagen %>" target="_blank">
+                                                <img src="/uploads/<%= m.imagen %>" width="60" style="border-radius: 5px; border: 1px solid #d7ccc8;">
+                                            </a>
+                                        <% } else { %>
+                                            <span class="text-muted">Sin imagen</span>
+                                        <% } %>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                <% } else { %>
+                    <p>No hay mensajes nuevos para mostrar.</p>
+                <% } %>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

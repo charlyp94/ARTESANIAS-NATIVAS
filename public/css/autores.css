@@ -1,0 +1,184 @@
+html {
+    background-color: beige; 
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: hsla(0, 93%, 50%, 0.863); 
+    background: url(../imagen/logo1.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center; 
+}
+
+
+.contenedor {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: center;
+}
+
+.wrapper {
+    grid-column: 1;
+    width: 10%;
+    height: auto;
+    margin-left: 10px;
+}
+
+.text {
+    grid-column: 2;
+    width: 100%;
+    margin-top: -10px;
+    margin-left: -500px;
+    padding-top: 0;
+    text-align: center;
+}
+
+h1 {
+    color: white;
+    margin-left: 0%;
+}
+h2{
+    color: white;
+    background-color: #af954cb0;
+}
+.img-1 {
+    margin-top: 10px;
+    margin-left: 5px; 
+    border-radius: 25px;   
+    width: 125px;
+     
+}
+
+header {
+    height: auto;
+    background-color: #af954cb0;
+    color: white;
+    font-family: 'Times New Roman', Times, serif, Helvetica, sans-serif;
+    padding: 5px 0;
+    text-align: center;
+}
+
+
+nav ul {
+    list-style-type: none;
+    padding: 0%;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 25px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    margin-top: -10px;
+    padding-top: 0;
+    position: relative;
+    top: -30px;
+}
+
+nav ul li a.activo {
+    text-decoration: underline;
+    font-weight: bold;
+    color: #ffd700; 
+}
+
+
+main {
+    padding: 20px;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 25px;
+    
+    border-radius: 10px;
+    max-width: 1000px;
+    margin: 20px auto;
+}
+
+section {
+    max-width: 900px;
+    margin: auto;
+}
+
+
+.miembro-card {
+     background: #af954cb0;
+    border-radius: 25px;
+    margin: 20px 0;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.miembro-card h3 {
+    color: rgb(255, 255, 255);
+    font-size: 1.8em;
+    margin-bottom: 15px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+    padding-bottom: 10px;
+    background-color: #af954cb0;
+}
+
+.miembro-card p {
+    color: rgb(255, 255, 255);
+    font-size: 0.9em;
+    margin-bottom: 15px;
+    background-color: #af954cb0;
+}
+
+
+.miembro-img {
+    width: 40%;
+    background: #af954cb0;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    margin: 10px 0;
+    padding: 5px;
+    text-align: center;
+}
+
+.contacto-info {
+    font-style: italic;
+    font-weight: bold;
+    font-size: 1em;
+    padding-top: 10px;
+}
+
+
+footer {
+    background: #af954cb0;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    height: 100px;
+}
+.pie{
+    text-align: center;
+    color: white;
+    font-size: 20px;
+}
+.pf{
+    color: rgb(252, 0, 0);
+    text-align: center;
+}
+a{
+    display: inline;
+    margin: 0 25px;
+    text-decoration: none;
+}
+a img{
+    max-width: 2.5%;
+    height: auto;
+}
+.instagram{
+    border-radius: 20px;
+}

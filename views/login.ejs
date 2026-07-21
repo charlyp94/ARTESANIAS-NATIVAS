@@ -1,0 +1,116 @@
+<!-- Incluye aquí tu <head> donde llamas a tu CSS -->
+<link rel="stylesheet" href="/css/estilo.css"> 
+
+<main class="contenedor-principal">
+    <div class="card-formulario">
+        <h2>Iniciar Sesión</h2>
+        <!-- Cambiado action por id para controlarlo con JS -->
+        <form id="loginForm">
+            <div class="campo">
+                <label>Correo Electrónico</label>
+                <input type="email" name="email" id="email" required>
+            </div>
+            <div class="campo">
+                <label>Contraseña</label>
+                <input type="password" name="password" id="password" required>
+            </div>
+            <button type="submit" class="btn-azul-boca">Entrar</button>
+        </form>
+    </div>
+</main>
+
+<style>
+    /* Contenedor centralizado */
+    .contenedor-principal {
+        display: flex;
+        justify-content: center;
+        margin-top: 50px;
+    }
+
+    /* El estilo de la "tarjeta" del formulario */
+    .card-formulario {
+        background: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        width: 100%;
+        max-width: 400px;
+    }
+
+    /* Campos de entrada */
+    .campo {
+        margin-bottom: 15px;
+    }
+
+    .campo input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 2px solid #002868; /* Azul Boca */
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    /* Botón estilo Boca */
+    .btn-azul-boca {
+        width: 100%;
+        background-color: #002868; /* Azul */
+        color: #FDB913; /* Amarillo */
+        font-weight: bold;
+        padding: 12px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn-azul-boca:hover {
+        background-color: #FDB913; /* Amarillo */
+        color: #002868; /* Azul */
+    }
+</style>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Script para manejar la lógica de login con SweetAlert -->
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault(); // Evita el envío tradicional
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        const response = await fetch('/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            window.location.href = data.redirect;
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: data.message,
+                confirmButtonColor: '#002868',
+                background: '#fff',
+                color: '#002868'
+            });
+        }
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<% if (typeof mensaje !== 'undefined' && mensaje !== null) { %>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: '¡Bienvenido!',
+            text: '<%= mensaje %>',
+            confirmButtonColor: '#002868'
+        });
+    </script>
+<% } %>

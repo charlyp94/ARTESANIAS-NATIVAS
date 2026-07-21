@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artesanias Nativas</title>
+    <link rel="stylesheet" href="../css/estilo1.css">
+</head>
+<body>
+    <header>
+         <div class="auth-buttons">
+            <% if (usuario) { %>
+                <span class="usuario-nombre">Hola, <%= usuario.nombre %>!</span>
+                <a href="/logout" class="btn-auth">Cerrar Sesión</a>
+            <% } else { %>
+                <a href="/login" class="btn-auth">Iniciar Sesión</a>
+                <a href="/registro" class="btn-auth">Registrarse</a>
+            <% } %>
+        </div>
+        <div class="contenedor">
+        <div class="wrapper">
+            <img id="imagen1" src="../imagen/logo.png" class="img-1" alt=" ">
+        </div>
+            <div class="text">
+                <h1>ARTESANIAS NATIVAS</h1>
+                <h2>Productos de Pueblos Originarios</h2>
+            </div>
+            
+        </div>
+         <nav>
+            <ul>
+                <div style="display: inline-flex;">
+                <li><h1><a href="../">Inicio</a></h1></li>
+                <li><h1><a href="../resumen">Resumen</a></h1></li>
+                 <li><h1><a href="../articulos">Productos</a></h1></li>
+                <li><h1><a href="../contacto">Contacto</a></h1></li>
+                <li><h1><a href="../autores">Autores</a></h1></li>
+                </div>
+                </div>
+
+        
+            </ul> 
+            </div>
+
+        </div>
+            
+        
+        </nav>
+        <style>
+            html{
+    background-color: beige
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0px;
+    padding: 0px;
+    background: url(../imagen/logo1.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center; 
+
+}
+.contenedor1{
+    background-color: #af954cb0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: center;
+    padding: 20px;
+    border-radius: 25px;
+    margin: 35px 30px;
+    height: 615px;
+    
+}
+.contenedor11{
+    background-color:#af5b4cb0 ;
+    grid-column: 1;
+    width: 10%;
+    height: auto;
+    margin-left: 40px;
+    margin-top: 15px;
+}
+.contenedor12{
+    grid-column: 2;
+    width: 10%;
+    height: 400px;
+    margin-left: 20px;
+    margin-top: auto;
+}
+.imagen{
+    float: right; 
+    margin-right: 100px; 
+    width: 500px; 
+    height: 600px;
+    margin-bottom: 60px;
+    margin-top: 15px;
+    border-radius: 25px;
+}
+.sangria{
+    text-indent: 60px;
+}
+.img-1{
+    margin-top: 10px;
+    margin-left: 5px; 
+    margin-right: 0%;
+    margin-bottom: 0%;
+    border-radius: 25px;  
+    width: 125px;
+}
+header {
+    height: auto;
+    background-color: #af954cb0;
+    color: white;
+    font-family: 'Times New Roman', Times, serif, Helvetica, sans-serif;
+    padding: 5px 0;
+    text-align: center;
+}
+.contenedor{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: center;
+}
+.wrapper{
+    grid-column: 1;
+    width: 10%;
+    height: auto;
+    margin-left: 20px;
+}
+.text{
+    grid-column: 2;
+    width: 100%;
+    margin-top: -10px;
+    margin-left: -500px;
+    padding-top: 0;
+    position: relative;
+    top: -10px;
+    text-align: center;
+
+}
+nav ul {
+    list-style-type: none;
+    padding: 0%;
+}
+nav ul li {
+    display: inline;
+    margin: 0 25px;
+}
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    margin-top: -10px;
+    padding-top: 0;
+    position: relative;
+    top: -30px;
+}
+h2{
+    color: white;
+    background-color: #af954cb0;
+    text-align: center;
+    font-size: 35px;
+    font-style: italic;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+p{
+    font-size: 25px;
+    color: white;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    font-family: 'Arial', sans-serif;
+    text-align: justify;
+    margin-left: 30px;
+    margin-top: 1px;
+}
+footer {
+    background: #af954cb0;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    height: 100px;
+}
+.pie{
+    text-align: center;
+    color: white;
+    font-size: 20px;
+}
+.pf{
+    color: rgb(252, 0, 0);
+    text-align: center;
+}
+a{
+    display: inline;
+    margin: 0 25px;
+    text-decoration: none;
+}
+a img{
+    max-width: 2.5%;
+    height: auto;
+}
+.instagram{
+    border-radius: 20px;
+}
+/* Estilo base de los enlaces del menú */
+nav a {
+    color: #000000; /* Color actual del texto */
+    text-decoration: none;
+    padding: 10px 15px;
+    transition: all 0.3s ease-in-out; /* ¡Aquí está la magia! */
+    position: relative;
+}
+
+/* Estilo al pasar el mouse (hover) */
+nav a:hover {
+    color: #020202; /* Un color dorado para resaltar */
+    transform: scale(1.1); /* Un pequeño efecto de zoom */
+    background-color: rgba(255, 255, 255, 0.1); /* Un fondo sutil al hover */
+    border-radius: 5px;
+}
+
+/* Opcional: Una línea subrayada animada */
+nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: #725d08;
+    transition: all 0.3s ease;
+}
+
+nav a:hover::after {
+    width: 100%;
+    left: 0;
+}
+/* Contenedor de botones (Arriba a la derecha) */
+.auth-buttons {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    z-index: 9999; /* Asegura que siempre estén por encima de todo */
+}
+
+/* Estilo base de los botones */
+.btn-auth {
+    background-color: #8b6e4e; 
+    color: white !important;
+    padding: 10px 20px;
+    border-radius: 25px; 
+    text-decoration: none !important;
+    font-size: 0.9rem;
+    font-weight: bold;
+    transition: all 0.4s ease; 
+    border: 2px solid transparent;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: inline-block;
+}
+
+/* Animación al pasar el mouse */
+.btn-auth:hover {
+    background-color: #ffffff;
+    color: #8b6e4e !important;
+    border-color: #8b6e4e;
+    transform: translateY(-3px); 
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+/* Estilo para el texto del usuario */
+.usuario-nombre {
+    background-color: #8b6e4e; /* Mismo color de fondo que los botones */
+    color: white;             /* Texto blanco para contrastar */
+    padding: 12px 24px;       /* Mismo espacio interno que los botones */
+    border-radius: 25px;      /* Bordes redondeados */
+    font-weight: bold;        /* Texto en negrita */
+    display: inline-block;    /* Para que respete el padding */
+}
+/* Estilo base (blanco) */
+nav a {
+    color: #ffffff; 
+    /* ... */
+}
+
+/* Estilo al pasar el mouse (hover) */
+nav a:hover {
+    color: #ffffff; /* <--- AQUÍ ESTÁ EL SECRETO */
+    transform: scale(1.15); 
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+}
+/* Aseguramos que la navegación no pierda su animación */
+nav ul li h1 a {
+    text-decoration: none;
+    color: white; /* O el color que uses para tus enlaces */
+    transition: all 0.3s ease; /* Transición suave para cualquier cambio */
+    display: inline-block; /* Importante para que el transform funcione bien */
+}
+
+/* Animación al pasar el cursor por el menú */
+nav ul li h1 a:hover {
+    color: #f1c40f; /* Cambia al color que prefieras al pasar el cursor */
+    transform: scale(1.1); /* Efecto de crecimiento suave */
+    text-shadow: 0 0 5px rgba(255,255,255,0.5); /* Un pequeño brillo al pasar el mouse */
+    outline: none;
+}
+        </style>
+    </header>
+<h2>RESUMEN</h2>
+<div class="contenedor1">
+    <div class="contenedor1.1">
+    <p class="sangria"> Concepto Principal: He desarrollado un proyecto para crear una tienda online dedicada a la reventa de productos artesanales y autóctonos. El objetivo central no es solo la generación de ingresos económicos, sino también la preservación y promoción de las técnicas artesanales autóctonas. Busco crear productos que armonicen la autenticidad del trabajo manual con diseños contemporáneos que satisfagan las necesidades del mercado actual.</p><br>
+    <p class="sangria"> Meta del Emprendimiento: Establecer un emprendimiento de ventas artesanales online sostenible en la región, contribuyendo a la generación de oportunidades de trabajo (a través de la colaboración con artesanos locales) y asegurando la preservación de las técnicas tradicionales.</p><br>
+    <p class="sangria"> Visión de Marca: Mi visión es desarrollar una marca de productos artesanales reconocida que represente fielmente la cultura local y, a la vez, se alinee con las demandas del mercado actual.
+    </p><br>
+    </div>
+    <div class="contenedor1.2">
+    <img src="../imagen/artesania1.jpg" alt="Imagen" class="imagen">
+    </div>
+</div>
+<footer>
+    <a href="https://www.facebook.com/profile.php?id=61568974913151" target="_blank">
+        <img src="../imagen/2021_Facebook_icon.svg.png" alt="logo del sitio">
+    </a>
+    <a href="https://www.instagram.com/ventas_artesanales_online/" target="_blank">
+        <img src="../imagen/instagram.jpg" class="instagram" alt="logo del sitio">
+    </a>
+    <p class="pie">&copy; 2024 Artesanias Nativas. Todos los derechos reservados. </p> 
+    
+</footer>
+</body>
+</html>
