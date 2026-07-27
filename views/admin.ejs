@@ -85,7 +85,16 @@
             <label class="form-label">Domicilio</label><input type="text" name="domicilio" class="form-control" required>
             <label class="form-label">Número de Contacto</label><input type="text" name="telefono" class="form-control" required>
             <label class="form-label">Correo Electrónico</label><input type="email" name="email" class="form-control" required>
-            <label class="form-label">Contraseña</label><input type="password" name="password" class="form-control" required>
+            
+            <!-- Campo de Contraseña con Botón de Ojito -->
+            <label class="form-label">Contraseña</label>
+            <div class="input-group mb-3">
+                <input type="password" name="password" id="passwordAdmin" class="form-control" required>
+                <button class="btn btn-outline-secondary" type="button" id="btnToggleAdmin" onclick="togglePassword('passwordAdmin', 'iconAdmin')">
+                    <span id="iconAdmin">🔒</span>
+                </button>
+            </div>
+
             <label class="form-label">Fecha de Nacimiento</label><input type="date" name="fecha_nacimiento" class="form-control" required>
             <label class="form-label">Ciudad</label><input type="text" name="ciudad" class="form-control" required>
             <label class="form-label">Provincia</label><input type="text" name="provincia" class="form-control" required>
@@ -149,6 +158,20 @@
         } catch (e) { 
             console.error(e);
             contenido.innerHTML = 'Error al cargar los datos. Verifica que sigues logueado.'; 
+        }
+    }
+
+    // Función para alternar la visibilidad de la contraseña
+    function togglePassword(idInput, idIcon) {
+        const input = document.getElementById(idInput);
+        const icon = document.getElementById(idIcon);
+        
+        if (input.type === "password") {
+            input.type = "text";
+            icon.textContent = "👁️"; 
+        } else {
+            input.type = "password";
+            icon.textContent = "🔒"; 
         }
     }
 </script>

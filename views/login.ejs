@@ -13,10 +13,18 @@
                 <label>Correo Electrónico</label>
                 <input type="email" name="email" id="email" required>
             </div>
-            <div class="campo">
+            
+            <!-- Campo de Contraseña con Botón de Ojito -->
+            <div class="campo" style="position: relative;">
                 <label>Contraseña</label>
-                <input type="password" name="password" id="password" required>
+                <div style="display: flex; align-items: center;">
+                    <input type="password" name="password" id="passwordLogin" required style="width: 100%;">
+                    <button type="button" id="btnToggleLogin" onclick="togglePassword('passwordLogin', 'iconLogin')" style="position: absolute; right: 10px; background: none; border: none; cursor: pointer; font-size: 1.2rem;">
+                        <span id="iconLogin">🔒</span>
+                    </button>
+                </div>
             </div>
+
             <button type="submit" class="btn-azul-boca">Entrar</button>
         </form>
     </div>
@@ -73,13 +81,27 @@
     }
 </style>
 
-<!-- Script para manejar la lógica de login con SweetAlert -->
+<!-- Script para manejar la lógica de login con SweetAlert y alternar contraseña -->
 <script>
+    // Función para alternar la visibilidad de la contraseña
+    function togglePassword(idInput, idIcon) {
+        const input = document.getElementById(idInput);
+        const icon = document.getElementById(idIcon);
+        
+        if (input.type === "password") {
+            input.type = "text";
+            icon.textContent = "👁️"; 
+        } else {
+            input.type = "password";
+            icon.textContent = "🔒"; 
+        }
+    }
+
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
         e.preventDefault(); // Evita el envío tradicional
 
         const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+        const password = document.getElementById('passwordLogin').value;
 
         try {
             const response = await fetch('/login', {

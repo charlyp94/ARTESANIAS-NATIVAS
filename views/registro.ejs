@@ -98,9 +98,15 @@
             <input type="email" name="email" class="form-control" required>
         </div>
 
-        <div class="mb-3">
+        <!-- Campo de Contraseña con Botón de Ojito -->
+        <div class="mb-3" style="position: relative;">
             <label class="form-label">Contraseña</label>
-            <input type="password" name="password" class="form-control" required>
+            <div class="input-group">
+                <input type="password" name="password" id="passwordRegistro" class="form-control" required>
+                <button class="btn btn-outline-secondary" type="button" id="btnToggleRegistro" onclick="togglePassword('passwordRegistro', 'iconRegistro')">
+                    <span id="iconRegistro">🔒</span>
+                </button>
+            </div>
         </div>
 
         <button type="submit" class="btn btn-primary w-100">Registrarse</button>
@@ -113,6 +119,20 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+    // Función para alternar la visibilidad de la contraseña
+    function togglePassword(idInput, idIcon) {
+        const input = document.getElementById(idInput);
+        const icon = document.getElementById(idIcon);
+        
+        if (input.type === "password") {
+            input.type = "text";
+            icon.textContent = "👁️"; // Cambia al ojito cerrado/oculto
+        } else {
+            input.type = "password";
+            icon.textContent = "🔒"; // Vuelve al ojito abierto
+        }
+    }
+
     document.getElementById('registroForm').addEventListener('submit', async (e) => {
         e.preventDefault(); // Evita que se recargue la página
         
