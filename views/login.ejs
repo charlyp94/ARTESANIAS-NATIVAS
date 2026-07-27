@@ -1,6 +1,9 @@
 <!-- Incluye aquí tu <head> donde llamas a tu CSS -->
 <link rel="stylesheet" href="/css/estilo.css"> 
 
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <main class="contenedor-principal">
     <div class="card-formulario">
         <h2>Iniciar Sesión</h2>
@@ -70,9 +73,6 @@
     }
 </style>
 
-<!-- SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <!-- Script para manejar la lógica de login con SweetAlert -->
 <script>
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -81,29 +81,53 @@
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
-        const response = await fetch('/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-        });
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
 
-        const data = await response.json();
+            const data = await response.json();
 
-        if (data.success) {
-            window.location.href = data.redirect;
-        } else {
+            if (data.success) {
+                // Validación específica si entra al panel de administración o rutas de admin
+                if (data.redirect && (data.redirect.includes('admin') || data.redirect.includes('panel'))) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Acceso concedido!',
+                        text: 'Bienvenido al panel de administración.',
+                        timer: 1500,
+                        showConfirmButton: false,
+                        confirmButtonColor: '#002868'
+                    }).then(() => {
+                        window.location.href = data.redirect;
+                    });
+                } else {
+                    window.location.href = data.redirect;
+                }
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message || 'Credenciales incorrectas',
+                    confirmButtonColor: '#002868',
+                    background: '#fff',
+                    color: '#002868'
+                });
+            }
+        } catch (error) {
+            console.error('Error en la petición:', error);
             Swal.fire({
                 icon: 'error',
-                title: 'Error',
-                text: data.message,
-                confirmButtonColor: '#002868',
-                background: '#fff',
-                color: '#002868'
+                title: 'Error de servidor',
+                text: 'No se pudo conectar con el servidor.',
+                confirmButtonColor: '#002868'
             });
         }
     });
 </script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <% if (typeof mensaje !== 'undefined' && mensaje !== null) { %>
     <script>
         Swal.fire({

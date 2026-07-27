@@ -144,7 +144,11 @@ app.post('/finalizar-compra', async (req, res) => {
 app.get('/panel-admin', esAdmin, async (req, res) => {
     try {
         const result = await db.query('SELECT * FROM usuarios');
-        res.render('admin', { usuarios: result.rows });
+        // Capturamos y limpiamos el mensaje de éxito de la sesión si existe
+        const mensajeExito = req.session.mensajeExito || null;
+        req.session.mensajeExito = null;
+
+        res.render('admin', { usuarios: result.rows, mensajeExito: mensajeExito });
     } catch (err) {
         console.error(err);
         res.status(500).send('Error al cargar el panel administrativo');
@@ -167,12 +171,17 @@ app.get('/api/admin/historial-usuario/:id', esAdmin, async (req, res) => {
 });
 
 app.post('/admin/agregar-usuario', esAdmin, async (req, res) => {
-    const { nombre, dni, domicilio, fecha_nacimiento, ciudad, provincia, telefono, email, password } = req.body;
+    const { nombre, dni, domicilio, fecha_nacimiento, ciudad, provincia, telefono, email, password, rol } = req.body;
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        const query = `INSERT INTO usuarios (nombre, dni, domicilio, fecha_nacimiento, ciudad, provincia, telefono, email, password, rol) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'usuario')`;
-        await db.query(query, [nombre, dni, domicilio, fecha_nacimiento, ciudad, provincia, telefono, email, hashedPassword]);
-        res.redirect('/panel-admin');
+        const query = `INSERT INTO usuarios (nombre, dni, domicilio, fecha_nacimiento, ciudad, provincia, telefono, email, password, rol) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`;
+        await db.query(query, [nombre, dni, domicilio, fecha_nacimiento, ciudad, provincia, telefono, email, hashedPassword, rol]);
+        
+        // Guardamos el mensaje de éxito en la sesión antes de redirigir
+        req.session.mensajeExito = 'El usuario fue registrado correctamente.';
+        req.session.save(() => {
+            res.redirect('/panel-admin');
+        });
     } catch (err) {
         console.error(err);
         res.status(500).send('Error al agregar usuario: ' + err.message);
