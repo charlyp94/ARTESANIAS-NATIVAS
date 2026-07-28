@@ -144,7 +144,6 @@ app.post('/finalizar-compra', async (req, res) => {
 app.get('/panel-admin', esAdmin, async (req, res) => {
     try {
         const result = await db.query('SELECT * FROM usuarios');
-        // Capturamos y limpiamos el mensaje de éxito de la sesión si existe
         const mensajeExito = req.session.mensajeExito || null;
         req.session.mensajeExito = null;
 
@@ -177,7 +176,6 @@ app.post('/admin/agregar-usuario', esAdmin, async (req, res) => {
         const query = `INSERT INTO usuarios (nombre, dni, domicilio, fecha_nacimiento, ciudad, provincia, telefono, email, password, rol) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`;
         await db.query(query, [nombre, dni, domicilio, fecha_nacimiento, ciudad, provincia, telefono, email, hashedPassword, rol]);
         
-        // Guardamos el mensaje de éxito en la sesión antes de redirigir
         req.session.mensajeExito = 'El usuario fue registrado correctamente.';
         req.session.save(() => {
             res.redirect('/panel-admin');
@@ -228,6 +226,31 @@ app.post('/login', async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: 'Error en el servidor' });
+    }
+});
+
+// --- RUTA NUEVA: RECUPERAR / RESTABLECER CONTRASEÑA ---
+app.post('/recuperar-password', async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        // 1. Verificar si el usuario existe en la base de datos
+        const result = await db.query('SELECT * FROM usuarios WHERE email = $1', [email]);
+
+        if (result.rows.length === 0) {
+            return res.json({ success: false, message: 'El correo electrónico no está registrado' });
+        }
+
+        // 2. Encriptar la nueva contraseña con bcrypt
+        const hashedPassword = await bcrypt.hash(password, 10);  
+
+        // 3. Actualizar la contraseña en la base de datos
+        await db.query('UPDATE usuarios SET password = $1 WHERE email = $2', [hashedPassword, email]);
+
+        res.json({ success: true, message: 'Tu contraseña ha sido actualizada con éxito. Ya puedes iniciar sesión.' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Error interno del servidor' });
     }
 });
 

@@ -27,8 +27,40 @@
 
             <button type="submit" class="btn-azul-boca">Entrar</button>
         </form>
+
+        <!-- Enlace para abrir el modal de recuperación -->
+        <p class="text-center mt-3">
+            <a href="#" onclick="abrirModalRecuperar(event)" style="font-size: 0.9rem; text-decoration: none; color: #002868;">¿Olvidaste tu contraseña?</a>
+        </p>
     </div>
 </main>
+
+<!-- Modal: Recuperar Contraseña -->
+<div id="modalRecuperar" class="modal-overlay" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center;">
+    <div class="card-formulario" style="background: white; max-width: 400px; padding: 25px; border-radius: 10px; position: relative;">
+        <h3 style="margin-bottom: 20px; font-size: 1.3rem; color: #002868;">Restablecer Contraseña</h3>
+        <form id="formRecuperar">
+            <div class="campo">
+                <label>Correo Electrónico</label>
+                <input type="email" name="email" id="emailRecuperar" required>
+            </div>
+            
+            <!-- Campo de Nueva Contraseña con el Ojito -->
+            <div class="campo" style="position: relative;">
+                <label>Nueva Contraseña</label>
+                <div style="display: flex; align-items: center;">
+                    <input type="password" name="password" id="passwordNueva" required style="width: 100%;">
+                    <button type="button" onclick="togglePassword('passwordNueva', 'iconRecuperar')" style="position: absolute; right: 10px; background: none; border: none; cursor: pointer; font-size: 1.2rem;">
+                        <span id="iconRecuperar">👁️‍🗨️</span>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-azul-boca" style="margin-top: 10px;">Actualizar Contraseña</button>
+            <button type="button" class="btn btn-secondary w-100 mt-2" onclick="cerrarModalRecuperar()" style="background: #6c757d; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 10px;">Cancelar</button>
+        </form>
+    </div>
+</div>
 
 <style>
     /* Contenedor centralizado */
@@ -81,7 +113,7 @@
     }
 </style>
 
-<!-- Script para manejar la lógica de login con SweetAlert y alternar contraseña -->
+<!-- Script para manejar la lógica de login, modal y contraseñas -->
 <script>
     // Función para alternar la visibilidad de la contraseña
     function togglePassword(idInput, idIcon) {
@@ -97,6 +129,64 @@
         }
     }
 
+    // Funciones para abrir y cerrar el modal de recuperación
+    function abrirModalRecuperar(e) {
+        e.preventDefault();
+        document.getElementById('modalRecuperar').style.display = 'flex';
+    }
+
+    function cerrarModalRecuperar() {
+        document.getElementById('modalRecuperar').style.display = 'none';
+    }
+
+    // Lógica para enviar la nueva contraseña al servidor
+    document.getElementById('formRecuperar').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('emailRecuperar').value;
+        const password = document.getElementById('passwordNueva').value;
+
+        try {
+            const response = await fetch('/recuperar-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // 1. Cerramos el modal y reseteamos el formulario PRIMERO
+                cerrarModalRecuperar();
+                document.getElementById('formRecuperar').reset();
+
+                // 2. Mostramos el SweetAlert limpio para que se vea en primer plano
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Contraseña actualizada!',
+                    text: data.message,
+                    confirmButtonColor: '#002868'
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message || 'No se pudo actualizar la contraseña',
+                    confirmButtonColor: '#002868'
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de servidor',
+                text: 'Ocurrió un error al procesar la solicitud.',
+                confirmButtonColor: '#002868'
+            });
+        }
+    });
+
+    // Lógica de inicio de sesión
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
         e.preventDefault(); // Evita el envío tradicional
 
